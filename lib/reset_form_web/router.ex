@@ -17,7 +17,7 @@ defmodule ResetFormWeb.Router do
   scope "/", ResetFormWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", ResetFormLive, :index
   end
 
   # Other scopes may use custom stacks.
