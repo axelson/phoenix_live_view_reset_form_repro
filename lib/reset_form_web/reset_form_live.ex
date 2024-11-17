@@ -16,27 +16,25 @@ defmodule ResetFormWeb.ResetFormLive do
       form:
         %MyForm{}
         |> Ecto.Changeset.change()
-        |> Phoenix.Component.to_form()
+        |> Phoenix.Component.to_form(),
+      id: socket.assigns.id + 1
     )
   end
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    socket =
-      socket
-      |> reset_form()
-
+    socket = assign(socket, id: 1)
+    socket = socket |> reset_form()
     {:ok, socket, layout: false}
   end
 
   @impl Phoenix.LiveView
   def render(assigns) do
-    IO.inspect(assigns.form, label: "assigns.form")
-
+    IO.inspect(assigns.id, label: "assigns.id (reset_form_live.ex:33)")
     ~H"""
     <div class="w-full max-w-md mx-auto p-4">
       <div className="relative">
-        <.form for={@form} phx-change="validate" phx-submit="submit">
+        <.form id={to_string(@id)} for={@form} phx-change="validate" phx-submit="submit">
           <.input
             id="note-input"
             field={@form[:note]}
@@ -62,17 +60,12 @@ defmodule ResetFormWeb.ResetFormLive do
 
   @impl Phoenix.LiveView
   def handle_event("validate", params, socket) do
-    IO.inspect(params, label: "params")
     socket = reset_form(socket)
-
     {:noreply, socket}
   end
 
   def handle_event("submit", params, socket) do
-    IO.inspect(params, label: "submit params")
-
     socket = reset_form(socket)
-
     {:noreply, socket}
   end
 end
